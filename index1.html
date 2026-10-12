@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NickTechs – Portfolio AWS d’Eyanam TCHALIM</title>
+<meta name="description" content="Portfolio AWS d’Eyanam TCHALIM, certifié AWS Solutions Architect – Associate et Cloud Practitioner&nbsp;: infrastructure as code, serverless et CI/CD.">
+<link rel="canonical" href="https://nicktechs.com/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="NickTechs – Portfolio AWS d’Eyanam TCHALIM">
+<meta property="og:description" content="Architectures AWS résilientes, sécurisées et reproductibles&nbsp;: infrastructure as code, serverless et CI/CD.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!-- CONTENU À PERSONNALISER&nbsp;: courriel, liens GitHub et LinkedIn (voir README.md). -->
+<div class="hero-wrap">
+<header class="site-header">
+  <a class="brand" href="index.html">NickTechs</a>
+  <nav aria-label="Navigation principale">
+    <a href="index.html#projets">Projets</a>
+    <a href="a-propos.html">À propos</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+<section class="hero container">
+  <div class="hero-text">
+    <p class="eyebrow">NickTechs · Portfolio AWS</p>
+    <h1>Eyanam <span>TCHALIM</span></h1>
+    <p class="lead">Je conçois et déploie des architectures AWS résilientes, sécurisées et reproductibles, de l’infrastructure as code au serverless.</p>
+    <p class="cta"><a class="btn btn-primary" href="#projets">Voir les projets</a><a class="btn btn-ghost" href="contact.html">Me contacter</a></p>
+    <ul class="cert-pills" aria-label="Certifications"><li><a href="https://aws.amazon.com/certification/certified-solutions-architect-associate/" rel="noopener"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 2.5 4 5.5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10v-6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m8.5 12 2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>AWS Certified Solutions Architect – Associate</a></li><li><a href="https://aws.amazon.com/certification/certified-cloud-practitioner/" rel="noopener"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 2.5 4 5.5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10v-6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m8.5 12 2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>AWS Certified Cloud Practitioner</a></li></ul>
+  </div>
+  <div class="hero-visual" aria-hidden="true">
+    <div class="terminal">
+      <div class="terminal-bar"><i></i><i></i><i></i></div>
+<pre><span class="c"># Infrastructure as Code, de bout en bout</span>
+<span class="p">$</span> terraform init
+<span class="p">$</span> terraform plan -out=tfplan
+<span class="p">$</span> terraform apply tfplan
+<span class="p">$</span> <span class="cursor"></span></pre>
+    </div>
+  </div>
+</section>
+</div>
+<main class="home">
+<section id="projets" class="section container">
+  <div class="section-head">
+    <h2>Projets</h2>
+    <p>Trois réalisations, de l’infrastructure as code au serverless et au déploiement continu.</p>
+  </div>
+  <ul class="cards">
+<li class="card">
+  <img src="images/thumb-3-tiers.svg" width="640" height="400" loading="lazy" alt="Illustration&nbsp;: trois couches (web, application, données) réparties sur deux zones, protégées par un WAF.">
+  <div class="card-body">
+    <p class="card-kicker">Projet 1</p>
+    <h3><a href="projet-infra-3-tiers-terraform.html">Déploiement d’une architecture à 3 niveaux avec Terraform</a></h3>
+    <p class="desc">Une infrastructure web, applicative et données répartie sur deux zones de disponibilité, protégée par un WAF et entièrement décrite en code.</p>
+    <ul class="chips" aria-label="Technologies"><li>Terraform</li><li>VPC</li><li>ALB</li><li>WAF</li><li>RDS</li></ul>
+    <span class="more" aria-hidden="true">Voir le projet</span>
+  </div>
+</li>
+<li class="card">
+  <img src="images/thumb-meteo.svg" width="640" height="400" loading="lazy" alt="Illustration&nbsp;: un soleil derrière un nuage de pluie.">
+  <div class="card-body">
+    <p class="card-kicker">Projet 2</p>
+    <h3><a href="projet-meteo-serverless.html">Mise en place d’une application météo serverless</a></h3>
+    <p class="desc">Une application météo sans serveur à administrer, construite avec des services AWS serverless.</p>
+    <ul class="chips" aria-label="Technologies"><li>Serverless</li></ul>
+    <span class="more" aria-hidden="true">Voir le projet</span>
+  </div>
+</li>
+<li class="card">
+  <img src="images/thumb-site-statique.svg" width="640" height="400" loading="lazy" alt="Illustration&nbsp;: un bucket S3, CloudFront et un navigateur, avec un push Git qui déclenche le déploiement.">
+  <div class="card-body">
+    <p class="card-kicker">Projet 3</p>
+    <h3><a href="projet-site-statique.html">Déploiement d’un site web statique sur AWS avec CI/CD (S3 + CloudFront)</a></h3>
+    <p class="desc">Un site web statique hébergé sur S3, diffusé par CloudFront en HTTPS et mis en ligne automatiquement par un pipeline CI/CD.</p>
+    <ul class="chips" aria-label="Technologies"><li>S3</li><li>CloudFront</li><li>CI/CD</li></ul>
+    <span class="more" aria-hidden="true">Voir le projet</span>
+  </div>
+</li>
+  </ul>
+</section>
+
+<section class="section band" aria-labelledby="certifs">
+  <div class="container">
+    <h2 id="certifs">Certifications</h2>
+    <p class="muted">Des compétences validées par AWS.</p>
+    <ul class="cert-cards"><li class="cert-card"><span class="cert-ico"><svg viewBox="0 0 24 24" width="34" height="34" aria-hidden="true"><path d="M12 2.5 4 5.5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10v-6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m8.5 12 2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><strong>AWS Certified Solutions Architect – Associate</strong><span>Amazon Web Services</span><a href="https://aws.amazon.com/certification/certified-solutions-architect-associate/" rel="noopener">Voir la certification</a></div></li><li class="cert-card"><span class="cert-ico"><svg viewBox="0 0 24 24" width="34" height="34" aria-hidden="true"><path d="M12 2.5 4 5.5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10v-6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m8.5 12 2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><strong>AWS Certified Cloud Practitioner</strong><span>Amazon Web Services</span><a href="https://aws.amazon.com/certification/certified-cloud-practitioner/" rel="noopener">Voir la certification</a></div></li></ul>
+  </div>
+</section>
+
+<section class="section container split">
+  <h2>À propos</h2>
+  <div>
+    <p>Certifié AWS, je m’intéresse à la conception d’architectures cloud fiables et à l’automatisation de leur déploiement. NickTechs rassemble mes projets et la façon dont je les ai construits.</p>
+    <p><a href="a-propos.html">En savoir plus sur mon parcours</a></p>
+  </div>
+</section>
+
+<section class="container">
+  <div class="cta-block">
+    <h2>Un projet, une question&nbsp;?</h2>
+    <a class="btn btn-primary" href="contact.html">Me contacter</a>
+  </div>
+</section>
+</main>
+<footer class="site-footer wide">
+  <p>© 2026 NickTechs · Eyanam TCHALIM · Hébergé sur Amazon S3 et CloudFront</p>
+  <p><a href="https://github.com/votre-compte">GitHub</a> · <a href="https://www.linkedin.com/in/votre-profil">LinkedIn</a> · <a href="mailto:vous@exemple.com">Courriel</a></p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Déploiement d’un site web statique sur AWS avec CI/CD (S3 + CloudFront) – NickTechs</title>
+<meta name="description" content="Un site web statique hébergé dans un bucket S3 privé, diffusé par CloudFront en HTTPS et mis en ligne automatiquement par un pipeline CI/CD.">
+<link rel="canonical" href="https://nicktechs.com/projet-site-statique.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">NickTechs</a>
+  <nav aria-label="Navigation principale">
+    <a href="index.html#projets" aria-current="page">Projets</a>
+    <a href="a-propos.html">À propos</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+<main>
+<article>
+  <p><a class="back" href="index.html#projets">Tous les projets</a></p>
+  <h1>Déploiement d’un site web statique sur AWS avec CI/CD (S3 + CloudFront)</h1>
+  <p class="lead">Un site web statique hébergé dans un bucket S3 privé, diffusé par CloudFront en HTTPS et mis en ligne automatiquement par un pipeline CI/CD.</p>
+  
+  <dl class="facts">
+    <div><dt>Rôle</dt><dd>Conception, déploiement, exploitation</dd></div>
+    <div><dt>Durée</dt><dd>Environ 2 semaines</dd></div>
+    <div><dt>Année</dt><dd>2026</dd></div>
+    <div><dt>Code source</dt><dd><a href="https://github.com/votre-compte/portfolio-aws">Dépôt GitHub</a></dd></div>
+  </dl>
+
+  <h2>Contexte et objectifs</h2>
+  <p>Un portfolio doit être rapide, peu coûteux et fiable. Un site statique répond à ces trois besoins sans serveur à maintenir. J’ai voulu en faire aussi une démonstration&nbsp;: l’hébergement lui-même illustre les bonnes pratiques AWS que je présente dans mes autres projets.</p>
+  <ul>
+<li>Servir le site en HTTPS sur un domaine personnalisé.</li>
+<li>Garder le bucket S3 entièrement privé.</li>
+<li>Mettre en ligne une modification en moins de cinq minutes après un push.</li>
+<li>Maintenir un coût mensuel de quelques dollars.</li>
+<li>Pouvoir recréer toute l’infrastructure à partir du code.</li>
+</ul>
+
+  <h2>Architecture</h2>
+  <p>Le visiteur résout le domaine avec Route 53, qui renvoie vers CloudFront. CloudFront termine la connexion HTTPS avec un certificat ACM, sert le contenu depuis son cache et ne contacte S3 que si l’objet est absent. Une CloudFront Function réécrit les adresses de répertoire&nbsp;: <code>/projets/</code> devient <code>/projets/index.html</code>.</p><p>L’accès à S3 passe par un Origin Access Control (OAC)&nbsp;: seule la distribution CloudFront est autorisée à lire les objets du bucket.</p>
+  <ol class="flow" aria-label="Chemin d’une requête"><li><strong>Visiteur</strong><span>Navigateur</span></li><li><strong>Route 53</strong><span>DNS</span></li><li class="main"><strong>CloudFront</strong><span>Cache et HTTPS</span></li><li><strong>S3</strong><span>Bucket privé</span></li></ol>
+<p class="flow-note">Composants associés&nbsp;: ACM (certificat TLS), CloudFront Function (réécriture d’adresses), OAC (accès privé à S3).</p>
+  
+
+  <h2>Services AWS</h2>
+  <div class="table-wrap"><table><thead><tr><th scope="col">Service</th><th scope="col">Rôle dans le projet</th><th scope="col">Réglage clé</th></tr></thead><tbody>
+<tr><th scope="row">Amazon S3</th><td>Stockage des fichiers du site</td><td>Blocage de l’accès public, versioning activé</td></tr>
+<tr><th scope="row">CloudFront</th><td>Cache, HTTPS, compression</td><td>OAC, redirection de HTTP vers HTTPS, TLS 1.2 minimum</td></tr>
+<tr><th scope="row">Route 53</th><td>Résolution DNS du domaine</td><td>Enregistrements alias A et AAAA</td></tr>
+<tr><th scope="row">ACM</th><td>Certificat TLS public</td><td>Créé en us-east-1, validation par DNS</td></tr>
+<tr><th scope="row">IAM</th><td>Droits du pipeline de déploiement</td><td>Rôle OIDC limité au bucket et à la distribution</td></tr>
+<tr><th scope="row">CloudWatch</th><td>Supervision</td><td>Alarme sur le taux d’erreurs 5xx</td></tr>
+</tbody></table></div>
+
+  <h2>Mise en œuvre</h2>
+  <p>Le bucket est créé avec le blocage d’accès public activé. La politique suivante autorise uniquement la distribution CloudFront à lire les objets.</p><figure class="code"><figcaption>politique-bucket.json</figcaption><pre><code>{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [{
+    &quot;Sid&quot;: &quot;AllowCloudFrontServicePrincipal&quot;,
+    &quot;Effect&quot;: &quot;Allow&quot;,
+    &quot;Principal&quot;: { &quot;Service&quot;: &quot;cloudfront.amazonaws.com&quot; },
+    &quot;Action&quot;: &quot;s3:GetObject&quot;,
+    &quot;Resource&quot;: &quot;arn:aws:s3:::NOM_BUCKET/*&quot;,
+    &quot;Condition&quot;: {
+      &quot;StringEquals&quot;: {
+        &quot;AWS:SourceArn&quot;: &quot;arn:aws:cloudfront::ID_COMPTE:distribution/ID_DISTRIBUTION&quot;
+      }
+    }
+  }]
+}</code></pre></figure><p>La CloudFront Function s’exécute à chaque requête et ajoute <code>index.html</code> aux adresses de répertoire.</p><figure class="code"><figcaption>url-rewrite.js</figcaption><pre><code>function handler(event) {
+  var request = event.request;
+  var uri = request.uri;
+
+  if (uri.endsWith(&#x27;/&#x27;)) {
+    request.uri += &#x27;index.html&#x27;;
+  } else if (!uri.includes(&#x27;.&#x27;)) {
+    request.uri += &#x27;/index.html&#x27;;
+  }
+  return request;
+}</code></pre></figure>
+
+  <h2>Résultats</h2>
+  <div class="table-wrap"><table><thead><tr><th scope="col">Indicateur</th><th scope="col">Résultat</th><th scope="col">Mesuré avec</th></tr></thead><tbody>
+<tr><th scope="row">Coût mensuel</th><td>Quelques dollars, nom de domaine compris</td><td>AWS Cost Explorer</td></tr>
+<tr><th scope="row">Délai de déploiement</th><td>Moins de cinq minutes</td><td>Durée du workflow GitHub Actions</td></tr>
+<tr><th scope="row">Accès direct au bucket</th><td>Refusé (403)</td><td>Requête curl sur l’adresse S3</td></tr>
+<tr><th scope="row">Score Lighthouse</th><td>90 et plus sur les quatre catégories</td><td>Audit Lighthouse en mode mobile</td></tr>
+</tbody></table></div>
+  <p class="note">Cibles du projet&nbsp;: confirmez-les avec vos propres mesures avant publication.</p>
+
+  <h2>Enseignements</h2>
+  <ul>
+<li>Le certificat ACM d’une distribution CloudFront doit être créé en <code>us-east-1</code>, quelle que soit la région du bucket.</li>
+<li>Avec une origine S3 privée, les sous-répertoires ne servent pas <code>index.html</code> sans réécriture d’adresse.</li>
+<li>Invalider le cache à chaque déploiement évite de servir du contenu périmé&nbsp;; des noms de fichiers versionnés réduisent ce besoin.</li>
+<li>Un budget AWS avec alerte doit exister dès le premier jour.</li>
+</ul>
+</article>
+<nav class="pager" aria-label="Autres projets"><a href="projet-meteo-serverless.html">Précédent&nbsp;: Mise en place d’une application météo serverless</a></nav>
+</main>
+<footer class="site-footer">
+  <p>© 2026 NickTechs · Eyanam TCHALIM · Hébergé sur Amazon S3 et CloudFront</p>
+  <p><a href="https://github.com/votre-compte">GitHub</a> · <a href="https://www.linkedin.com/in/votre-profil">LinkedIn</a> · <a href="mailto:vous@exemple.com">Courriel</a></p>
+</footer>
+<script src="script.js" defer></script>
+</body>
+</html>
