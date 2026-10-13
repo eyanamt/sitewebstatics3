@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <rect width="640" height="400" fill="#0F1B2D"/>
+  <circle cx="250" cy="170" r="150" fill="#FF9900" opacity=".07"/>
+  <!-- soleil -->
+  <circle cx="262" cy="150" r="52" fill="#FF9900"/>
+  <g stroke="#FF9900" stroke-width="7" stroke-linecap="round">
+    <path d="M262 64 V84"/><path d="M262 216 V236"/><path d="M176 150 H196"/><path d="M328 150 H348"/>
+    <path d="M201 89 L215 103"/><path d="M309 197 L323 211"/><path d="M201 211 L215 197"/><path d="M309 103 L323 89"/>
+  </g>
+  <!-- nuage -->
+  <g fill="#E7ECF5">
+    <circle cx="352" cy="232" r="40"/><circle cx="414" cy="205" r="54"/><circle cx="474" cy="235" r="38"/>
+    <rect x="322" y="232" width="190" height="42" rx="21"/>
+  </g>
+  <!-- pluie -->
+  <g stroke="#5CC7D1" stroke-width="6" stroke-linecap="round">
+    <path d="M362 296 l-9 26"/><path d="M406 296 l-9 26"/><path d="M450 296 l-9 26"/><path d="M494 296 l-9 26"/>
+    <path d="M384 330 l-9 24"/><path d="M428 330 l-9 24"/><path d="M472 330 l-9 24"/>
+  </g>
+  <g font-size="12" fill="#7D8DA6"><text x="40" y="376">Serverless</text></g>
+</svg>

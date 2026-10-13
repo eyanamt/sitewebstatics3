@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <rect width="640" height="400" fill="#0F1B2D"/>
+  <!-- WAF -->
+  <path d="M320 16 l26 10 v20 c0 18-12 30-26 36 c-14-6-26-18-26-36 v-20 z" fill="none" stroke="#FF9900" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M308 46 l9 9 l17-18" fill="none" stroke="#FF9900" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="362" y="56" font-size="15" font-weight="600" fill="#9FB0C8">WAF</text>
+  <path d="M320 84 V104" stroke="#FF9900" stroke-width="3"/><path d="M313 100 L320 110 L327 100 z" fill="#FF9900"/>
+  <!-- couches -->
+  <g>
+    <rect x="40" y="112" width="560" height="68" rx="12" fill="#14233B" stroke="#2F4264"/>
+    <rect x="40" y="198" width="560" height="68" rx="12" fill="#14233B" stroke="#2F4264"/>
+    <rect x="40" y="284" width="560" height="68" rx="12" fill="#14233B" stroke="#2F4264"/>
+    <g font-size="16" font-weight="700" fill="#E7ECF5">
+      <text x="60" y="152">Web</text><text x="60" y="238">App</text><text x="60" y="324">Données</text>
+    </g>
+    <g fill="#0F1B2D" stroke="#5CC7D1" stroke-width="2">
+      <rect x="200" y="124" width="160" height="44" rx="8"/><rect x="390" y="124" width="160" height="44" rx="8"/>
+      <rect x="200" y="210" width="160" height="44" rx="8"/><rect x="390" y="210" width="160" height="44" rx="8"/>
+      <rect x="200" y="296" width="160" height="44" rx="8"/><rect x="390" y="296" width="160" height="44" rx="8"/>
+    </g>
+    <g font-size="15" font-weight="600" fill="#E7ECF5" text-anchor="middle">
+      <text x="280" y="152">EC2</text><text x="470" y="152">EC2</text>
+      <text x="280" y="238">EC2</text><text x="470" y="238">EC2</text>
+      <text x="280" y="324">RDS</text><text x="470" y="324">RDS</text>
+    </g>
+    <path d="M360 318 H390" stroke="#FF9900" stroke-width="2.5" stroke-dasharray="4 4"/>
+  </g>
+  <!-- flux -->
+  <g stroke="#FF9900" stroke-width="3"><path d="M280 180 V198"/><path d="M470 180 V198"/><path d="M280 266 V284"/><path d="M470 266 V284"/></g>
+  <g fill="#FF9900"><path d="M274 194 L280 202 L286 194 z"/><path d="M464 194 L470 202 L476 194 z"/><path d="M274 280 L280 288 L286 280 z"/><path d="M464 280 L470 288 L476 280 z"/></g>
+  <g font-size="12" fill="#7D8DA6" text-anchor="middle"><text x="280" y="378">Zone A</text><text x="470" y="378">Zone B</text></g>
+</svg>
