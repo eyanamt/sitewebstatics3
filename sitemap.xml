@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://nicktechs.com/</loc></url>
+  <url><loc>https://nicktechs.com/projet-site-statique.html</loc></url>
+  <url><loc>https://nicktechs.com/projet-infra-3-tiers-terraform.html</loc></url>
   <url><loc>https://nicktechs.com/a-propos.html</loc></url>
   <url><loc>https://nicktechs.com/contact.html</loc></url>
-  <url><loc>https://nicktechs.com/projet-infra-3-tiers-terraform.html</loc></url>
-  <url><loc>https://nicktechs.com/projet-meteo-serverless.html</loc></url>
-  <url><loc>https://nicktechs.com/projet-site-statique.html</loc></url>
 </urlset>

@@ -4,8 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Déploiement d’un site web statique sur AWS avec CI/CD (S3 + CloudFront) – NickTechs</title>
-<meta name="description" content="Un site web statique hébergé dans un bucket S3 privé, diffusé par CloudFront en HTTPS et mis en ligne automatiquement par un pipeline CI/CD.">
+<meta name="description" content="Site portfolio rapide, sécurisé et peu coûteux, hébergé sur Amazon S3, diffusé par Amazon CloudFront et mis à jour automatiquement avec GitHub Actions.">
 <link rel="canonical" href="https://nicktechs.com/projet-site-statique.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Déploiement d’un site web statique sur AWS avec CI/CD (S3 + CloudFront) – NickTechs">
+<meta property="og:description" content="Site portfolio rapide, sécurisé et peu coûteux, hébergé sur Amazon S3, diffusé par Amazon CloudFront et mis à jour automatiquement avec GitHub Actions.">
+<meta name="color-scheme" content="light dark">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css">
 </head>
@@ -22,90 +26,201 @@
 <article>
   <p><a class="back" href="index.html#projets">Tous les projets</a></p>
   <h1>Déploiement d’un site web statique sur AWS avec CI/CD (S3 + CloudFront)</h1>
-  <p class="lead">Un site web statique hébergé dans un bucket S3 privé, diffusé par CloudFront en HTTPS et mis en ligne automatiquement par un pipeline CI/CD.</p>
-  
-  <dl class="facts">
-    <div><dt>Rôle</dt><dd>Conception, déploiement, exploitation</dd></div>
-    <div><dt>Durée</dt><dd>Environ 2 semaines</dd></div>
-    <div><dt>Année</dt><dd>2026</dd></div>
-    <div><dt>Code source</dt><dd><a href="https://github.com/votre-compte/portfolio-aws">Dépôt GitHub</a></dd></div>
-  </dl>
+  <p class="lead">Site portfolio rapide, sécurisé et peu coûteux, hébergé sur Amazon S3, diffusé par Amazon CloudFront et mis à jour automatiquement avec GitHub Actions.</p>
+  <dl class="facts"><div><dt>Date</dt><dd>13 octobre 2026</dd></div><div><dt>Site</dt><dd><a href="https://nicktechs.com">nicktechs.com</a></dd></div><div><dt>Code source</dt><dd><a href="https://github.com/eyanamt/sitewebstatics3">sitewebstatics3</a></dd></div><div><dt>Auteur</dt><dd>Eyanam TCHALIM</dd></div></dl>
 
-  <h2>Contexte et objectifs</h2>
-  <p>Un portfolio doit être rapide, peu coûteux et fiable. Un site statique répond à ces trois besoins sans serveur à maintenir. J’ai voulu en faire aussi une démonstration&nbsp;: l’hébergement lui-même illustre les bonnes pratiques AWS que je présente dans mes autres projets.</p>
-  <ul>
-<li>Servir le site en HTTPS sur un domaine personnalisé.</li>
-<li>Garder le bucket S3 entièrement privé.</li>
-<li>Mettre en ligne une modification en moins de cinq minutes après un push.</li>
-<li>Maintenir un coût mensuel de quelques dollars.</li>
-<li>Pouvoir recréer toute l’infrastructure à partir du code.</li>
+<h2>Contexte et objectifs</h2>
+<p>Ce projet décrit la conception, le déploiement et l’optimisation d’un site web statique sur AWS. Il a été conçu pour créer un site portfolio rapide, sécurisé et facile à maintenir. Il s’agit de <a href="https://nicktechs.com">https://nicktechs.com</a>.</p>
+<p>Le nom de domaine nicktechs.com a été acquis pour ce site. Le besoin impose une architecture simple et peu coûteuse, un accès sécurisé en HTTPS, des frais d’exploitation minimaux et une gestion simplifiée des mises à jour.</p>
+<p>Objectifs&nbsp;:</p>
+<ul>
+<li>permettre l’accès au site nicktechs.com en HTTPS&nbsp;;</li>
+<li>garder une architecture simple, sans serveur à administrer&nbsp;;</li>
+<li>maintenir des frais d’exploitation minimaux&nbsp;;</li>
+<li>versionner le site dans GitHub pour simplifier la gestion et la restauration des mises à jour&nbsp;;</li>
+<li>automatiser le déploiement avec GitHub Actions, en limitant les droits au strict nécessaire.</li>
 </ul>
 
-  <h2>Architecture</h2>
-  <p>Le visiteur résout le domaine avec Route 53, qui renvoie vers CloudFront. CloudFront termine la connexion HTTPS avec un certificat ACM, sert le contenu depuis son cache et ne contacte S3 que si l’objet est absent. Une CloudFront Function réécrit les adresses de répertoire&nbsp;: <code>/projets/</code> devient <code>/projets/index.html</code>.</p><p>L’accès à S3 passe par un Origin Access Control (OAC)&nbsp;: seule la distribution CloudFront est autorisée à lire les objets du bucket.</p>
-  <ol class="flow" aria-label="Chemin d’une requête"><li><strong>Visiteur</strong><span>Navigateur</span></li><li><strong>Route 53</strong><span>DNS</span></li><li class="main"><strong>CloudFront</strong><span>Cache et HTTPS</span></li><li><strong>S3</strong><span>Bucket privé</span></li></ol>
-<p class="flow-note">Composants associés&nbsp;: ACM (certificat TLS), CloudFront Function (réécriture d’adresses), OAC (accès privé à S3).</p>
-  
+<h2>Architecture</h2>
+<p>Les visiteurs atteignent le site par Route 53 et CloudFront&nbsp;; le contenu est stocké dans S3 et mis à jour par un pipeline GitHub Actions.</p>
+<p>Les requêtes des utilisateurs sont acheminées via Route 53 vers une distribution CloudFront, qui diffuse le contenu mis en cache depuis un compartiment S3. ACM fournit le certificat SSL utilisé pour la diffusion HTTPS via CloudFront.</p>
+<p>Le site est construit en HTML. Les mises à jour sont préparées localement et versionnées dans GitHub avant leur déploiement sur AWS.</p>
+<figure class="schema"><img src="images/site-statique-architecture.jpg" width="640" height="451" loading="lazy" alt="Schéma d’architecture&nbsp;: des utilisateurs interrogent Route 53, qui renvoie vers CloudFront. CloudFront utilise Certificate Manager et lit un compartiment S3. Un développeur pousse son code vers GitHub, dont le pipeline synchronise S3 et invalide le cache CloudFront."><figcaption>Figure 1 – Architecture du projet&nbsp;: Route 53, CloudFront, S3, ACM et pipeline CI/CD</figcaption></figure>
+<figure class="schema"><img src="images/site-statique-diffusion-ci-cd.jpg" width="663" height="412" loading="lazy" alt="En haut, la diffusion du site&nbsp;: visiteur, Route 53, CloudFront et S3 privé, avec ACM. En bas, la livraison continue&nbsp;: développeur, GitHub Actions, secrets GitHub et utilisateur IAM, qui synchronise S3 et invalide le cache CloudFront."><figcaption>Figure 2 – Vue détaillée&nbsp;: diffusion du site (en haut) et livraison continue (en bas)</figcaption></figure>
+<h3>Flux d’une requête</h3>
+<ol>
+<li>Le visiteur saisit nicktechs.com&nbsp;; Route 53 renvoie l’adresse de la distribution CloudFront.</li>
+<li>La connexion HTTPS s’établit avec CloudFront, avec le certificat fourni par ACM.</li>
+<li>Si le fichier demandé est en cache, CloudFront le renvoie immédiatement.</li>
+<li>Sinon, CloudFront le lit dans le compartiment S3, le met en cache puis le renvoie au visiteur.</li>
+</ol>
+<h3>Flux de mise à jour</h3>
+<ol>
+<li>Le développeur modifie le site localement et exécute <code>git push</code> vers GitHub.</li>
+<li>GitHub Actions déclenche le workflow de déploiement.</li>
+<li>Le workflow s’authentifie auprès d’AWS avec l’identité IAM.</li>
+<li>Il synchronise les fichiers vers S3 (<code>aws s3 sync</code>).</li>
+<li>Il invalide le cache CloudFront pour que la nouvelle version soit visible immédiatement.</li>
+</ol>
 
-  <h2>Services AWS</h2>
-  <div class="table-wrap"><table><thead><tr><th scope="col">Service</th><th scope="col">Rôle dans le projet</th><th scope="col">Réglage clé</th></tr></thead><tbody>
-<tr><th scope="row">Amazon S3</th><td>Stockage des fichiers du site</td><td>Blocage de l’accès public, versioning activé</td></tr>
-<tr><th scope="row">CloudFront</th><td>Cache, HTTPS, compression</td><td>OAC, redirection de HTTP vers HTTPS, TLS 1.2 minimum</td></tr>
-<tr><th scope="row">Route 53</th><td>Résolution DNS du domaine</td><td>Enregistrements alias A et AAAA</td></tr>
-<tr><th scope="row">ACM</th><td>Certificat TLS public</td><td>Créé en us-east-1, validation par DNS</td></tr>
-<tr><th scope="row">IAM</th><td>Droits du pipeline de déploiement</td><td>Rôle OIDC limité au bucket et à la distribution</td></tr>
-<tr><th scope="row">CloudWatch</th><td>Supervision</td><td>Alarme sur le taux d’erreurs 5xx</td></tr>
+<h2>Services AWS utilisés</h2>
+<p>Le site repose sur cinq services AWS, auxquels s’ajoute GitHub pour le code et l’automatisation.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Service</th><th scope="col">Rôle dans le projet</th><th scope="col">Réglage clé</th></tr></thead><tbody>
+<tr><th scope="row">Amazon S3</th><td>Stockage des fichiers HTML et CSS du site</td><td>Compartiment privé, lu uniquement par CloudFront (OAC)</td></tr>
+<tr><th scope="row">Amazon CloudFront</th><td>Diffusion mondiale, cache et HTTPS</td><td>Redirection de HTTP vers HTTPS, certificat ACM, objet racine index.html</td></tr>
+<tr><th scope="row">Amazon Route 53</th><td>DNS et gestion du domaine</td><td>Zone hébergée nicktechs.com, enregistrements alias vers CloudFront</td></tr>
+<tr><th scope="row">AWS Certificate Manager (ACM)</th><td>Certificat SSL/TLS pour HTTPS</td><td>Certificat public pour nicktechs.com, créé en us-east-1 (obligatoire pour CloudFront)</td></tr>
+<tr><th scope="row">AWS IAM</th><td>Droits du déploiement automatisé</td><td>Identité dédiée, limitée au compartiment du site et à l’invalidation CloudFront</td></tr>
+<tr><th scope="row">GitHub et GitHub Actions</th><td>Dépôt du code, versionnement et pipeline</td><td>Dépôt sitewebstatics3, déploiement à chaque push sur la branche principale</td></tr>
 </tbody></table></div>
 
-  <h2>Mise en œuvre</h2>
-  <p>Le bucket est créé avec le blocage d’accès public activé. La politique suivante autorise uniquement la distribution CloudFront à lire les objets.</p><figure class="code"><figcaption>politique-bucket.json</figcaption><pre><code>{
-  &quot;Version&quot;: &quot;2012-10-17&quot;,
-  &quot;Statement&quot;: [{
-    &quot;Sid&quot;: &quot;AllowCloudFrontServicePrincipal&quot;,
-    &quot;Effect&quot;: &quot;Allow&quot;,
-    &quot;Principal&quot;: { &quot;Service&quot;: &quot;cloudfront.amazonaws.com&quot; },
-    &quot;Action&quot;: &quot;s3:GetObject&quot;,
-    &quot;Resource&quot;: &quot;arn:aws:s3:::NOM_BUCKET/*&quot;,
-    &quot;Condition&quot;: {
-      &quot;StringEquals&quot;: {
-        &quot;AWS:SourceArn&quot;: &quot;arn:aws:cloudfront::ID_COMPTE:distribution/ID_DISTRIBUTION&quot;
-      }
-    }
-  }]
-}</code></pre></figure><p>La CloudFront Function s’exécute à chaque requête et ajoute <code>index.html</code> aux adresses de répertoire.</p><figure class="code"><figcaption>url-rewrite.js</figcaption><pre><code>function handler(event) {
-  var request = event.request;
-  var uri = request.uri;
-
-  if (uri.endsWith(&#x27;/&#x27;)) {
-    request.uri += &#x27;index.html&#x27;;
-  } else if (!uri.includes(&#x27;.&#x27;)) {
-    request.uri += &#x27;/index.html&#x27;;
-  }
-  return request;
-}</code></pre></figure>
-
-  <h2>Résultats</h2>
-  <div class="table-wrap"><table><thead><tr><th scope="col">Indicateur</th><th scope="col">Résultat</th><th scope="col">Mesuré avec</th></tr></thead><tbody>
-<tr><th scope="row">Coût mensuel</th><td>Quelques dollars, nom de domaine compris</td><td>AWS Cost Explorer</td></tr>
-<tr><th scope="row">Délai de déploiement</th><td>Moins de cinq minutes</td><td>Durée du workflow GitHub Actions</td></tr>
-<tr><th scope="row">Accès direct au bucket</th><td>Refusé (403)</td><td>Requête curl sur l’adresse S3</td></tr>
-<tr><th scope="row">Score Lighthouse</th><td>90 et plus sur les quatre catégories</td><td>Audit Lighthouse en mode mobile</td></tr>
-</tbody></table></div>
-  <p class="note">Cibles du projet&nbsp;: confirmez-les avec vos propres mesures avant publication.</p>
-
-  <h2>Enseignements</h2>
-  <ul>
-<li>Le certificat ACM d’une distribution CloudFront doit être créé en <code>us-east-1</code>, quelle que soit la région du bucket.</li>
-<li>Avec une origine S3 privée, les sous-répertoires ne servent pas <code>index.html</code> sans réécriture d’adresse.</li>
-<li>Invalider le cache à chaque déploiement évite de servir du contenu périmé&nbsp;; des noms de fichiers versionnés réduisent ce besoin.</li>
-<li>Un budget AWS avec alerte doit exister dès le premier jour.</li>
+<h2>Sécurité</h2>
+<p>La sécurité repose sur le chiffrement HTTPS, un accès au stockage réservé à CloudFront et des droits de déploiement limités au strict nécessaire.</p>
+<h3>Chiffrement et accès</h3>
+<ul>
+<li><strong>HTTPS obligatoire</strong> : le certificat ACM sécurise les échanges et CloudFront redirige tout le trafic HTTP vers HTTPS.</li>
+<li><strong>Compartiment non public</strong> : seul CloudFront peut lire les fichiers, grâce à un Origin Access Control (OAC)&nbsp;; la politique du compartiment est limitée à la distribution.</li>
+<li><strong>Surface d’attaque réduite</strong> : un site statique n’a ni serveur applicatif, ni base de données, ni formulaire à protéger.</li>
 </ul>
+<h3>Droits de déploiement</h3>
+<p>Le pipeline utilise une identité IAM dédiée, dont les droits sont limités au compartiment du site et à l’invalidation du cache CloudFront.</p>
+<ul>
+<li>Le workflow s’authentifie avec les clés d’accès de cet utilisateur IAM, conservées dans les secrets du dépôt GitHub (<code>AWS_ACCESS_KEY_ID</code> et <code>AWS_SECRET_ACCESS_KEY</code>)&nbsp;; elles ne sont jamais écrites dans le code.</li>
+<li>Le déploiement n’est déclenché que par la branche principale (<code>main</code>), ce qui empêche qu’une branche de test modifie le site public.</li>
+</ul>
+
+<h2>Fiabilité et performance</h2>
+<p>Il n’y a aucun serveur à maintenir&nbsp;: la disponibilité et la performance reposent sur les services gérés S3, CloudFront et Route 53.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Domaine</th><th scope="col">Mécanisme</th></tr></thead><tbody>
+<tr><th scope="row">Diffusion</th><td>CloudFront sert le contenu depuis ses points de présence les plus proches du visiteur, avec mise en cache</td></tr>
+<tr><th scope="row">Cache</th><td>Les fichiers sont servis depuis le cache de CloudFront&nbsp;; S3 n’est sollicité que lorsqu’un fichier est absent du cache ou invalidé.</td></tr>
+<tr><th scope="row">Contenu léger</th><td>Le site est en HTML et CSS statiques, sans traitement côté serveur, ce qui limite le temps de chargement.</td></tr>
+<tr><th scope="row">Stockage</th><td>S3 Standard conserve les objets de façon redondante dans plusieurs zones de disponibilité</td></tr>
+<tr><th scope="row">DNS</th><td>Route 53 est un service DNS géré, sans serveur à exploiter</td></tr>
+<tr><th scope="row">Mises à jour</th><td>Invalidation du cache après chaque déploiement&nbsp;: la nouvelle version est visible rapidement</td></tr>
+<tr><th scope="row">Restauration</th><td>Le site est versionné dans GitHub&nbsp;: revenir à une version précédente consiste à annuler un commit puis à pousser, ce qui relance le déploiement</td></tr>
+</tbody></table></div>
+
+<h2>Mise en œuvre</h2>
+<p>La mise en place suit sept étapes&nbsp;; ensuite, chaque mise à jour du site se déploie par un simple <code>git push</code>.</p>
+<ol>
+<li>Acquérir le nom de domaine nicktechs.com et créer la zone hébergée Route 53.</li>
+<li>Créer le compartiment S3 du site, avec l’accès public bloqué.</li>
+<li>Demander dans ACM, en région us-east-1, un certificat pour nicktechs.com.</li>
+<li>Créer la distribution CloudFront&nbsp;: origine S3 avec Origin Access Control, redirection de HTTP vers HTTPS, certificat ACM, objet racine index.html.</li>
+<li>Créer l’enregistrement alias Route 53 (nicktechs.com) vers la distribution.</li>
+<li>Créer l’utilisateur IAM de déploiement avec la politique limitée de la section Sécurité, puis enregistrer ses clés et l’identifiant de la distribution dans les secrets du dépôt GitHub.</li>
+<li>Ajouter le workflow de déploiement dans <code>.github/workflows/</code> du dépôt.</li>
+</ol>
+<h3>Workflow GitHub Actions</h3>
+<p>Le workflow se déclenche à chaque push sur <code>main</code>, synchronise les fichiers vers S3, puis invalide le cache CloudFront.</p>
+<figure class="code"><figcaption>deploy.yml</figcaption><pre><code>name: Deploy static website to AWS S3
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Synchroniser le site vers S3
+        run: |
+          aws s3 sync . s3://nicktech --delete \
+            --exclude &quot;.git/*&quot; --exclude &quot;.github/*&quot;
+
+      - name: Invalider le cache CloudFront
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths &quot;/*&quot;</code></pre></figure>
+<p>Les exclusions évitent d’envoyer le dossier <code>.git</code> (historique) et le dossier <code>.github</code> (workflows) dans un compartiment qui sert un site public. Vérifiez les versions actuelles des actions dans leur documentation avant de figer le workflow.</p>
+<h3>Mettre à jour le site</h3>
+<p>Après modification des fichiers en local&nbsp;:</p>
+<figure class="code"><figcaption>Terminal</figcaption><pre><code>git add .
+git commit -m &quot;Mise à jour du site&quot;
+git push origin main</code></pre></figure>
+<p>Le déploiement démarre automatiquement&nbsp;; son déroulement se suit dans l’onglet Actions du dépôt GitHub.</p>
+
+<h2>Coûts et optimisation</h2>
+<p>En fonctionnement normal, le site coûte environ 1,60 $ par mois, dont les deux tiers pour le nom de domaine&nbsp;; CloudFront, S3 et ACM sont pratiquement gratuits à ce niveau de trafic.</p>
+<h3>Estimation des coûts</h3>
+<p>Hypothèses&nbsp;: région us-east-1, 10 000 visites par mois, site de 50 Mo, 2 Mo transférés par visite (soit 20 Go par mois), tarifs à la demande relevés le 13 octobre 2026. Les volumes de trafic sont une hypothèse de travail.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Poste</th><th scope="col">Calcul</th><th scope="col">Estimation mensuelle</th></tr></thead><tbody>
+<tr><th scope="row">S3&nbsp;: stockage et requêtes</th><td>50 Mo à 0,023 $/Go, plus quelques centaines de requêtes d’envoi à 0,005 $ les 1 000</td><td>moins de 0,01 $</td></tr>
+<tr><th scope="row">CloudFront&nbsp;: transfert et requêtes</th><td>20 Go et environ 100 000 requêtes, dans l’offre gratuite permanente (1 To et 10 millions de requêtes)</td><td>0 $</td></tr>
+<tr><th scope="row">Invalidations CloudFront</th><td>Un chemin par déploiement, 1 000 chemins gratuits par mois</td><td>0 $</td></tr>
+<tr><th scope="row">Route 53&nbsp;: zone hébergée</th><td>0,50 $ par zone et par mois</td><td>0,50 $</td></tr>
+<tr><th scope="row">Route 53&nbsp;: requêtes DNS</th><td>0,40 $ le million&nbsp;; les requêtes alias vers CloudFront ne sont pas facturées</td><td>moins de 0,05 $</td></tr>
+<tr><th scope="row">ACM&nbsp;: certificat public</th><td>Gratuit avec CloudFront</td><td>0 $</td></tr>
+<tr><th scope="row">Nom de domaine</th><td>Environ 13 $ par an pour un .com, selon le registraire</td><td>environ 1,08 $</td></tr>
+<tr><th scope="row"><strong>Total mensuel</strong></th><td></td><td><strong>environ 1,60 $</strong></td></tr>
+</tbody></table></div>
+<p>Le trafic devrait dépasser environ 500 000 visites par mois (à 2 Mo chacune) avant de sortir de l’offre gratuite permanente de CloudFront. Au-delà, le transfert sortant est facturé environ 0,085 $ par Go dans la première tranche.</p>
+<p><strong>Coûts non inclus</strong> : journaux d’accès CloudFront, versioning S3, alarmes CloudWatch. Les tarifs proviennent des pages tarifaires et de la documentation d’AWS, complétées par des sources tierces pour S3 et le prix du domaine&nbsp;; à confirmer avec l’AWS Pricing Calculator.</p>
+<h3>Suivi des coûts</h3>
+<ul>
+<li>Un budget AWS Budgets de quelques dollars, avec alerte à 80 % et 100 %, signale immédiatement une dérive.</li>
+<li>Des étiquettes de coût (par exemple Projet = site-statique) permettront de suivre ce site dans Cost Explorer si le compte héberge d’autres projets.</li>
+</ul>
+<h3>Solutions de réduction, avec leur compromis</h3>
+<div class="table-wrap"><table><thead><tr><th scope="col">Levier</th><th scope="col">Effet</th><th scope="col">Compromis</th></tr></thead><tbody>
+<tr><td>Optimiser les images (WebP, dimensions adaptées) et minifier le CSS</td><td>Moins de données transférées, pages plus rapides</td><td>Une étape de préparation avant le déploiement</td></tr>
+<tr><td>Activer la compression de CloudFront (Brotli, gzip)</td><td>Réduit le volume transféré pour les fichiers texte</td><td>Aucun compromis notable</td></tr>
+<tr><td>Cache long sur les fichiers versionnés</td><td>Moins de requêtes vers S3, pages plus rapides</td><td>Renommer les fichiers à chaque changement, ou invalider</td></tr>
+<tr><td>Une seule invalidation «&nbsp;/*&nbsp;» par déploiement</td><td>Reste dans les 1 000 chemins gratuits par mois</td><td>Le cache est vidé en entier après chaque déploiement</td></tr>
+<tr><td>Classe de prix CloudFront</td><td>Réduit le tarif unitaire en excluant les sites de diffusion les plus chers</td><td>Latence plus élevée hors Amérique du Nord et Europe&nbsp;; sans effet tant que le trafic reste dans l’offre gratuite</td></tr>
+<tr><td>Règle de cycle de vie S3 sur les anciennes versions (si le versioning est activé)</td><td>Évite l’accumulation d’anciennes versions payantes</td><td>Historique limité à la durée choisie</td></tr>
+<tr><td>Ne pas ajouter AWS WAF</td><td>Évite environ 6 $ par mois (5 $ la Web ACL et 1 $ par règle), soit plus que le coût total du site</td><td>Pas de filtrage applicatif, peu utile sur un site statique sans formulaire</td></tr>
+</tbody></table></div>
+<h3>Compromis coût et simplicité</h3>
+<p>Une architecture S3 et CloudFront ramène les coûts fixes à la zone Route 53 et au nom de domaine&nbsp;: il n’y a ni instance à payer en continu, ni serveur à administrer. Le compromis est l’absence de traitement côté serveur&nbsp;: un formulaire de contact ou une fonction dynamique demanderait de compléter l’architecture, par exemple avec API Gateway et Lambda.</p>
+
+<h2>Résultats</h2>
+<p>Le site est en production à l’adresse <a href="https://nicktechs.com">https://nicktechs.com</a> avec un déploiement automatisé&nbsp;; les constats ci-dessous reposent sur la description du projet.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Point vérifié</th><th scope="col">Constat</th><th scope="col">Source</th></tr></thead><tbody>
+<tr><th scope="row">Site en production</th><td>Accessible sur https://nicktechs.com</td><td>Description du projet</td></tr>
+<tr><th scope="row">HTTPS</th><td>Certificat ACM servi par CloudFront</td><td>Description du projet</td></tr>
+<tr><th scope="row">Déploiement</th><td>Automatisé avec GitHub Actions à chaque push sur la branche principale</td><td>Description du projet et workflow</td></tr>
+<tr><th scope="row">Droits de déploiement</th><td>Limités au compartiment S3 et à l’invalidation CloudFront</td><td>Description du projet</td></tr>
+<tr><th scope="row">Code source</th><td>Dépôt GitHub sitewebstatics3</td><td>github.com/eyanamt/sitewebstatics3</td></tr>
+<tr><th scope="row">Coût estimé</th><td>Environ 1,60 $ par mois (estimation, pas une facture)</td><td>Section Coûts et optimisation</td></tr>
+</tbody></table></div>
+
+<h2>Enseignements et évolutions</h2>
+<p>Le projet atteint son objectif d’un site rapide, sécurisé et peu coûteux&nbsp;; sept pistes permettent de le durcir et de l’industrialiser.</p>
+<h3>Enseignements</h3>
+<ul>
+<li>Une architecture statique S3 et CloudFront répond au besoin pour un coût proche de celui du seul nom de domaine.</li>
+<li>Le certificat ACM d’une distribution CloudFront doit être créé en <code>us-east-1</code>, quelle que soit la région du compartiment.</li>
+<li>Invalider le cache à chaque déploiement évite de servir du contenu périmé.</li>
+<li>Versionner le site dans GitHub simplifie les mises à jour et la restauration d’une version précédente.</li>
+</ul>
+<h3>Pistes d’amélioration</h3>
+<div class="table-wrap"><table><thead><tr><th scope="col">Piste</th><th scope="col">Intérêt</th></tr></thead><tbody>
+<tr><td>Remplacer les clés d’accès par un rôle IAM assumé via OpenID Connect (OIDC), limité au dépôt et à la branche principale</td><td>Supprime les clés de longue durée stockées dans GitHub&nbsp;; correspond au rôle limité visé par la description du projet</td></tr>
+<tr><td>Ajouter des en-têtes de sécurité (HSTS, X-Content-Type-Options, Content-Security-Policy) avec une Response Headers Policy CloudFront</td><td>Durcit le site sans serveur supplémentaire</td></tr>
+<tr><td>Activer le versioning S3, avec une règle de cycle de vie</td><td>Permet de restaurer un fichier supprimé ou écrasé</td></tr>
+<tr><td>Mettre en place AWS Budgets avec alerte</td><td>Détecte immédiatement une dérive de coût</td></tr>
+<tr><td>Ajouter des contrôles qualité au pipeline (liens cassés, audit Lighthouse)</td><td>Détecte les défauts avant la mise en ligne</td></tr>
+<tr><td>Décrire l’infrastructure avec Terraform</td><td>Permet de rendre l’ensemble reproductible</td></tr>
+<tr><td>Ajouter un environnement de préproduction</td><td>Permet de tester une modification avant de la publier</td></tr>
+</tbody></table></div>
+
 </article>
-<nav class="pager" aria-label="Autres projets"><a href="projet-meteo-serverless.html">Précédent&nbsp;: Mise en place d’une application météo serverless</a></nav>
+<nav class="pager" aria-label="Autres projets"><a class="next" href="projet-infra-3-tiers-terraform.html">Suivant&nbsp;: Déploiement d’une architecture AWS à 3 niveaux avec Terraform</a></nav>
 </main>
 <footer class="site-footer">
   <p>© 2026 NickTechs · Eyanam TCHALIM · Hébergé sur Amazon S3 et CloudFront</p>
-  <p><a href="https://github.com/votre-compte">GitHub</a> · <a href="https://www.linkedin.com/in/votre-profil">LinkedIn</a> · <a href="mailto:vous@exemple.com">Courriel</a></p>
+  <p><a href="https://github.com/eyanamt">GitHub</a> · <a href="https://www.linkedin.com/in/eyanam-t-173402416/">LinkedIn</a> · <a href="mailto:tchalimyannick@gmail.com">Courriel</a></p>
 </footer>
 <script src="script.js" defer></script>
 </body>
