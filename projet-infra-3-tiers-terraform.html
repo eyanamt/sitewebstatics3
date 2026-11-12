@@ -164,7 +164,7 @@ skip_final_snapshot     = false  # instantané final conservé à la suppression
 <tr><th scope="row"><strong>Total mensuel</strong></th><td></td><td><strong>environ 186 $</strong></td><td><strong>environ 118 $</strong></td></tr>
 </tbody></table></div>
 <p>Les six adresses IPv4 de la colonne Production se répartissent ainsi&nbsp;: deux pour les NAT Gateways, deux pour l’ALB public (une par zone) et deux pour les instances web, qui reçoivent une adresse publique dans les sous-réseaux publics.</p>
-<p><strong>Coûts variables non inclus</strong> : traitement des données par les NAT Gateways (0,045 $ par Go), capacités des load balancers (LCU), requêtes inspectées par le WAF (0,60 $ par million), stockage disque des instances et de la base, sauvegardes au-delà de l’espace inclus, journaux CloudWatch. Les tarifs proviennent de la page officielle du WAF et de sources tierces qui reprennent les tarifs AWS&nbsp;; confirmez-les avec l’AWS Pricing Calculator avant de publier des montants.</p>
+<p><strong>Coûts variables non inclus</strong> : traitement des données par les NAT Gateways (0,045 $ par Go), capacités des load balancers (LCU), requêtes inspectées par le WAF (0,60 $ par million), stockage disque des instances et de la base, sauvegardes au-delà de l’espace inclus, journaux CloudWatch.</p>
 <h3>Suivi des coûts</h3>
 <ul>
 <li>Le fournisseur AWS applique déjà les étiquettes <code>Environment</code> et <code>ManagedBy</code> à toutes les ressources&nbsp;: il suffit de les activer comme étiquettes de répartition des coûts dans la facturation pour suivre ce projet dans Cost Explorer.</li>
