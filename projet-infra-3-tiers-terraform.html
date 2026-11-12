@@ -194,7 +194,6 @@ skip_final_snapshot     = false  # instantané final conservé à la suppression
 <tr><th scope="row">Capacité des niveaux</th><td>Web et applicatif&nbsp;: 2 à 4 instances, 2 souhaitées</td><td>État Terraform (groupes Auto Scaling)</td></tr>
 <tr><th scope="row">Exposition à Internet</th><td>Un seul point d’entrée&nbsp;: l’ALB public, derrière le WAF</td><td><code>security.tf</code> et <code>web-tier.tf</code></td></tr>
 <tr><th scope="row">Sorties produites</th><td>10 sorties&nbsp;: VPC, sous-réseaux, NAT Gateways, Web ACL, noms DNS des ALB, point d’accès de la base</td><td><code>outputs.tf</code></td></tr>
-<tr><th scope="row">Fin de vie</th><td>L’état courant ne contient plus aucune ressource&nbsp;: l’environnement a été détruit après les essais</td><td><code>terraform.tfstate</code></td></tr>
 </tbody></table></div>
 <p>Ces constats portent sur la configuration et l’état Terraform. Les fichiers fournis ne contiennent aucune mesure de performance, de charge ou de bascule&nbsp;: ajoutez-en (test de charge, exercice de bascule Multi-AZ) pour étayer les objectifs de disponibilité.</p>
 
