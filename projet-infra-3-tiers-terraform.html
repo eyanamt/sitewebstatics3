@@ -188,7 +188,7 @@ skip_final_snapshot     = false  # instantané final conservé à la suppression
 <h2>Résultats</h2>
 <p>Le code et l’état Terraform confirment un déploiement complet de l’architecture&nbsp;: 46 ressources gérées, réparties sur deux zones, avec les paramètres de résilience attendus.</p>
 <div class="table-wrap"><table><thead><tr><th scope="col">Point vérifié</th><th scope="col">Constat</th><th scope="col">Source</th></tr></thead><tbody>
-<tr><th scope="row">Ressources déployées</th><td>46 ressources gérées et 3 sources de données</td><td>Sauvegarde de l’état Terraform</td></tr>
+<tr><th scope="row">Ressources déployées</th><td>46 ressources gérées</td><td>Sauvegarde de l’état Terraform</td></tr>
 <tr><th scope="row">Répartition par niveau</th><td>Deux sous-réseaux par niveau, un dans chaque zone</td><td><code>network.tf</code></td></tr>
 <tr><th scope="row">Base de données</th><td>MySQL 8.0, Multi-AZ, stockage chiffré, sauvegardes sur 7 jours, non publique</td><td>État Terraform et <code>database.tf</code></td></tr>
 <tr><th scope="row">Capacité des niveaux</th><td>Web et applicatif&nbsp;: 2 à 4 instances, 2 souhaitées</td><td>État Terraform (groupes Auto Scaling)</td></tr>
